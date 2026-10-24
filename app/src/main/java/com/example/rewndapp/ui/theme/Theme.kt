@@ -12,11 +12,10 @@ import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
     primary = Naranja,
-    onPrimary = NegroTx,
-    background = NegroBg,
-    surface = surface,
-    onSurface = onSurface,
-    outline = Borde
+    secondary = TextoSecundario,
+    background = Fondo,
+    onBackground = FondoTarjeta,
+    outline = TextoSecundario,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -38,7 +37,6 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun RewndAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {

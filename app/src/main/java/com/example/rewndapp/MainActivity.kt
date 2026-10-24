@@ -30,9 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.rewndapp.model.Serie
 import com.example.rewndapp.model.Estado
-
-
+import com.example.rewndapp.data.listaSeries
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +75,6 @@ fun Biblioteca() {
                 )
             }
         }
-        ClasificarSeries()
     }
 }
 
@@ -122,22 +121,10 @@ fun CabeceraFicha(nombre: String) {
     }
 }
 
-@Composable
-fun ClasificarSeries() {
-    var estadoSeleccionado by remember { mutableStateOf(Estado.VIENDO) }
-    val seriesFiltradas = series.filter { it.estado == estadoSeleccionado }
-    Row(
-        modifier = Modifier.fillMaxSize(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // Aqui iran los botones para clasificar el estado de las series
-    }
-}
-
 
 @Preview(showBackground = true)
 @Composable
-fun FichaAlumnoPreview() {
+fun BibliotecaPreview() {
     MaterialTheme {
         Biblioteca()
     }
