@@ -6,15 +6,14 @@ plugins {
 android {
     namespace = "com.example.rewndapp"
     compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
+        version = release(37)
     }
+
 
     defaultConfig {
         applicationId = "com.example.rewndapp"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 

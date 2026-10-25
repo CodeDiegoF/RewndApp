@@ -6,6 +6,7 @@ val Fondo = Color(0xFF26231C)
 val FondoTarjeta = Color(0xFF2E2620)
 val Naranja = Color(0xFFF96A18)
 val TextoSecundario = Color(0xFFB8A99A)
+val FondoCaratula = Color(0xFF3A2A21)
 
 val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)

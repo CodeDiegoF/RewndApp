@@ -4,19 +4,29 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,11 +38,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.rewndapp.model.Serie
-import com.example.rewndapp.model.Estado
 import com.example.rewndapp.data.listaSeries
+import com.example.rewndapp.ui.theme.Fondo
+import com.example.rewndapp.ui.theme.FondoCaratula
+import com.example.rewndapp.ui.theme.FondoTarjeta
+import com.example.rewndapp.ui.theme.Naranja
+import com.example.rewndapp.ui.theme.TextoSecundario
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,73 +72,173 @@ fun Biblioteca() {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
+            .background(color = Fondo)
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        CabeceraFicha(nombre = nombre)
+        Cabecera(nombre = nombre)
 
         OutlinedTextField(
             value = serie,
             onValueChange = { textoNuevo -> serie = textoNuevo },
-            label = { Text("Buscar serie") },
+            label = { Text("Buscar serie en mi biblioteca", color = Color.White, fontSize = 14.sp) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
         )
 
-        if (resumen.isNotEmpty()) {
-            Card(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            horizontalArrangement = Arrangement.Center,
+        ){
+            OutlinedButton(
+                onClick = { /*TODO*/ },
+                shape = RectangleShape,
+                colors = ButtonDefaults.buttonColors(containerColor = Naranja)
+            ){
                 Text(
-                    text = resumen,
-                    modifier = Modifier.padding(16.dp),
+                    color = Color.Black,
+                    text = "Viendo"
                 )
             }
+            OutlinedButton(
+                onClick = {},
+                shape = RectangleShape,
+                colors = ButtonDefaults.buttonColors(containerColor = FondoCaratula)
+            ){
+                Text(
+                    color = Color.White,
+                    text = "Por ver"
+                )
+            }
+            OutlinedButton(
+                onClick = {},
+                shape = RectangleShape,
+                colors = ButtonDefaults.buttonColors(containerColor = FondoCaratula)
+            ){
+                Text(
+                    color = Color.White,
+                    text = "Completadas"
+                )
+            }
+        }
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            listaSeries.forEach { serie ->
+                TarjetaSerie(serie = serie)
+            }
+        }
+
+        OutlinedButton(
+            onClick = { },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            shape = RectangleShape,
+            colors = ButtonDefaults.buttonColors(containerColor = Naranja)
+        ){
+            Text(
+                color = Color.Black,
+                text = " + Añadir serie"
+            )
         }
     }
 }
 
 
 @Composable
-fun CabeceraFicha(nombre: String) {
+fun Cabecera(nombre: String) {
     Row(
+        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
     ){
-        Column {
+        Column (
+            modifier = Modifier
+                .padding(4.dp)
+                .weight(1f),
+            verticalArrangement = Arrangement.Top,
+        ) {
             Text(
-                text = "Mi Biblioteca",
-                style = MaterialTheme.typography.titleLarge,
+                color = Color.White, text = ("Mi Biblioteca"),
+                style = MaterialTheme.typography.titleLarge
             )
         }
     }
     Row(
+        modifier = Modifier.padding(4.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(120.dp),
+        horizontalArrangement = Arrangement.spacedBy(160.dp),
     ) {
         Column {
         Text(
-            text = if (nombre.isBlank()) "Invitado" else "Hola, $nombre",
+            color = Color.White, text = if (nombre.isBlank()) "Invitado" else "Hola, $nombre",
             style = MaterialTheme.typography.titleLarge,
-        )
-        Text(
-            text = "4 seires en la biblioteca",
-            style = MaterialTheme.typography.bodyMedium,
         )
     }
         Box(
             modifier = Modifier
                 .size(64.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primaryContainer),
+                .background(FondoCaratula),
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                text = nombre.take(1).uppercase().ifEmpty { "?" },
+                color = Color.White, text = nombre.take(1).uppercase().ifEmpty { "?" },
                 style = MaterialTheme.typography.titleLarge,
             )
         }
     }
 }
 
+@Composable
+fun TarjetaSerie(serie: Serie) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp),
+        colors = CardDefaults.cardColors(containerColor = FondoTarjeta)
+    ) {
+        Row(
+            modifier = Modifier
+            .padding(15.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(width = 56.dp, height = 72.dp)
+                    .background(FondoCaratula),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Carátula", fontSize = 12.sp, color = TextoSecundario)
+            }
+            Column {
+                Text(serie.titulo, fontSize = 20.sp, color = Color.White)
+                Text("${serie.anio} - ${serie.generos}", fontSize = 13.sp, color = TextoSecundario)
+                Text(serie.progreso, fontSize = 14.sp, color = Color.White)
+            }
+        }
+    }
+}
+
+@Composable
+fun BarraInferior(){
+    NavigationBar(
+        containerColor = FondoTarjeta,
+        contentColor = Color.White,
+        tonalElevation = 10.dp
+    ){
+//        NavigationBarItem(){}
+//        NavigationBarItem(){}
+//        NavigationBarItem(){}
+
+
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
