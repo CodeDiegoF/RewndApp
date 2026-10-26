@@ -1,8 +1,5 @@
 package com.example.rewndapp
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
@@ -39,20 +35,6 @@ import com.example.rewndapp.ui.theme.FondoCaratula
 import com.example.rewndapp.ui.theme.FondoTarjeta
 import com.example.rewndapp.ui.theme.Naranja
 import com.example.rewndapp.ui.theme.TextoSecundario
-
-class PantallaDetalle : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                Detalle(
-                    serie = listaSeries[0],
-                    onVolver = {  }
-                )
-            }
-        }
-    }
-}
 
 @Composable
 fun Detalle(
@@ -69,7 +51,8 @@ fun Detalle(
                 .fillMaxSize()
                 .background(color = Fondo)
                 .verticalScroll(rememberScrollState())
-                .padding(24.dp),
+                .padding(24.dp)
+                .padding(bottom = 80.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Row(

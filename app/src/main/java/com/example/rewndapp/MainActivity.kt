@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,9 +13,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -53,14 +55,29 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                Biblioteca()
+                RewndApp()
             }
         }
     }
 }
 
 @Composable
-fun Biblioteca() {
+fun RewndApp() {
+    var serieSeleccionada by remember { mutableStateOf<Serie?>(null) }
+    val serie = serieSeleccionada
+
+    if (serie == null) {
+        Biblioteca(onSerieClick = { serieSeleccionada = it })
+    } else {
+        Detalle(
+            serie = serie,
+            onVolver = { serieSeleccionada = null }
+        )
+    }
+}
+
+@Composable
+fun Biblioteca(onSerieClick: (Serie) -> Unit = {}) {
     var nombre by rememberSaveable { mutableStateOf("") }
     var serie by rememberSaveable { mutableStateOf("") }
 
@@ -72,7 +89,6 @@ fun Biblioteca() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .padding(24.dp)
                 .padding(bottom = 80.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -125,12 +141,17 @@ fun Biblioteca() {
                 }
             }
 
-            Column(
-                modifier = Modifier.fillMaxWidth(),
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                listaSeries.forEach { serie ->
-                    TarjetaSerie(serie = serie)
+                items(listaSeries) { serieLista ->
+                    TarjetaSerie(
+                        serie = serieLista,
+                        onClick = { onSerieClick(serieLista) }
+                    )
                 }
             }
 
@@ -178,9 +199,11 @@ fun Cabecera(nombre: String) {
         }
     }
     Row(
-        modifier = Modifier.padding(4.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(160.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Column {
         Text(
@@ -204,8 +227,9 @@ fun Cabecera(nombre: String) {
 }
 
 @Composable
-fun TarjetaSerie(serie: Serie) {
+fun TarjetaSerie(serie: Serie, onClick: () -> Unit) {
     Card(
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp),
@@ -295,7 +319,7 @@ fun BarraInferior(){
 @Composable
 fun BibliotecaPreview() {
     MaterialTheme {
-        Biblioteca()
+        RewndApp()
     }
 }
 
