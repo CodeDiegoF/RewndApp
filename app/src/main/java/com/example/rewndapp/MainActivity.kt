@@ -4,35 +4,31 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,86 +62,97 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Biblioteca() {
     var nombre by rememberSaveable { mutableStateOf("") }
-    var resumen by rememberSaveable { mutableStateOf("") }
     var serie by rememberSaveable { mutableStateOf("") }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
             .background(color = Fondo)
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Cabecera(nombre = nombre)
-
-        OutlinedTextField(
-            value = serie,
-            onValueChange = { textoNuevo -> serie = textoNuevo },
-            label = { Text("Buscar serie en mi biblioteca", color = Color.White, fontSize = 14.sp) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-        )
-
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            horizontalArrangement = Arrangement.Center,
-        ){
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(24.dp)
+                .padding(bottom = 80.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Cabecera(nombre = nombre)
+
+            OutlinedTextField(
+                value = serie,
+                onValueChange = { textoNuevo -> serie = textoNuevo },
+                label = { Text("Buscar serie en mi biblioteca", color = Color.White, fontSize = 14.sp) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                horizontalArrangement = Arrangement.Center,
+            ){
+                OutlinedButton(
+                    onClick = { /*TODO*/ },
+                    shape = RectangleShape,
+                    colors = ButtonDefaults.buttonColors(containerColor = Naranja)
+                ){
+                    Text(
+                        color = Color.Black,
+                        text = "Viendo"
+                    )
+                }
+                OutlinedButton(
+                    onClick = {},
+                    shape = RectangleShape,
+                    colors = ButtonDefaults.buttonColors(containerColor = FondoCaratula)
+                ){
+                    Text(
+                        color = Color.White,
+                        text = "Por ver"
+                    )
+                }
+                OutlinedButton(
+                    onClick = {},
+                    shape = RectangleShape,
+                    colors = ButtonDefaults.buttonColors(containerColor = FondoCaratula)
+                ){
+                    Text(
+                        color = Color.White,
+                        text = "Completadas"
+                    )
+                }
+            }
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                listaSeries.forEach { serie ->
+                    TarjetaSerie(serie = serie)
+                }
+            }
+
             OutlinedButton(
-                onClick = { /*TODO*/ },
+                onClick = { },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
                 shape = RectangleShape,
                 colors = ButtonDefaults.buttonColors(containerColor = Naranja)
             ){
                 Text(
                     color = Color.Black,
-                    text = "Viendo"
-                )
-            }
-            OutlinedButton(
-                onClick = {},
-                shape = RectangleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = FondoCaratula)
-            ){
-                Text(
-                    color = Color.White,
-                    text = "Por ver"
-                )
-            }
-            OutlinedButton(
-                onClick = {},
-                shape = RectangleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = FondoCaratula)
-            ){
-                Text(
-                    color = Color.White,
-                    text = "Completadas"
+                    text = " + Añadir serie"
                 )
             }
         }
 
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+        Box(
+            modifier = Modifier.align(Alignment.BottomCenter)
         ) {
-            listaSeries.forEach { serie ->
-                TarjetaSerie(serie = serie)
-            }
-        }
-
-        OutlinedButton(
-            onClick = { },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            shape = RectangleShape,
-            colors = ButtonDefaults.buttonColors(containerColor = Naranja)
-        ){
-            Text(
-                color = Color.Black,
-                text = " + Añadir serie"
-            )
+            BarraInferior()
         }
     }
 }
@@ -205,7 +213,9 @@ fun TarjetaSerie(serie: Serie) {
     ) {
         Row(
             modifier = Modifier
-            .padding(15.dp),
+                .fillMaxWidth()
+                .padding(15.dp),
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Box(
@@ -216,11 +226,18 @@ fun TarjetaSerie(serie: Serie) {
             ) {
                 Text("Carátula", fontSize = 12.sp, color = TextoSecundario)
             }
-            Column {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
                 Text(serie.titulo, fontSize = 20.sp, color = Color.White)
                 Text("${serie.anio} - ${serie.generos}", fontSize = 13.sp, color = TextoSecundario)
                 Text(serie.progreso, fontSize = 14.sp, color = Color.White)
             }
+            Icon(
+                painter = painterResource(id = R.drawable.ic_flecha),
+                contentDescription = "Ver detalle",
+                tint = Color.White
+            )
         }
     }
 }
@@ -232,11 +249,45 @@ fun BarraInferior(){
         contentColor = Color.White,
         tonalElevation = 10.dp
     ){
-//        NavigationBarItem(){}
-//        NavigationBarItem(){}
-//        NavigationBarItem(){}
-
-
+        NavigationBarItem(
+            selected = true,
+            onClick = { },
+            icon = { Icon(painter = painterResource(id = R.drawable.ic_biblioteca), contentDescription = "Biblioteca") },
+            label = { Text("Biblioteca") },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = Color.Black,
+                selectedTextColor = Color.White,
+                indicatorColor = Naranja,
+                unselectedIconColor = TextoSecundario,
+                unselectedTextColor = TextoSecundario
+            )
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { },
+            icon = { Icon(painter = painterResource(id = R.drawable.ic_conversaciones), contentDescription = "Conversaciones") },
+            label = { Text("Conversaciones") },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = Color.Black,
+                selectedTextColor = Color.White,
+                indicatorColor = Naranja,
+                unselectedIconColor = TextoSecundario,
+                unselectedTextColor = TextoSecundario
+            )
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { },
+            icon = { Icon(painter = painterResource(id = R.drawable.ic_perfil), contentDescription = "Perfil") },
+            label = { Text("Perfil") },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = Color.Black,
+                selectedTextColor = Color.White,
+                indicatorColor = Naranja,
+                unselectedIconColor = TextoSecundario,
+                unselectedTextColor = TextoSecundario
+            )
+        )
     }
 }
 
