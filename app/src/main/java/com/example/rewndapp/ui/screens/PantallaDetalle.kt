@@ -28,7 +28,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.rewndapp.data.listaSeries
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
+import com.example.rewndapp.repositories.SerieRepository
 import com.example.rewndapp.model.Serie
 import com.example.rewndapp.ui.theme.Fondo
 import com.example.rewndapp.ui.theme.FondoCaratula
@@ -80,7 +82,12 @@ fun Detalle(
                         .background(FondoCaratula),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("Carátula", fontSize = 12.sp, color = TextoSecundario)
+                    AsyncImage(
+                        model = serie.imagen,
+                        contentDescription = "Carátula de ${serie.titulo}",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
                 }
                 Column(
                     modifier = Modifier.weight(1f),
@@ -88,7 +95,11 @@ fun Detalle(
                 ) {
                     Text(serie.titulo, fontSize = 32.sp, color = Color.White)
                     Text(serie.pais, fontSize = 14.sp, color = TextoSecundario)
-                    Text(serie.temporadas, fontSize = 14.sp, color = TextoSecundario)
+                    Text(
+                        "${serie.totalTemporadas} temporadas · ${serie.episodios} episodios",
+                        fontSize = 14.sp,
+                        color = TextoSecundario
+                    )
                     Text(serie.idioma, fontSize = 14.sp, color = TextoSecundario)
                 }
             }
@@ -160,7 +171,7 @@ fun Detalle(
 fun DetallePreview() {
     MaterialTheme {
         Detalle(
-            serie = listaSeries[0],
+            serie = SerieRepository.getSeries()[0],
             onVolver = {  }
         )
     }
