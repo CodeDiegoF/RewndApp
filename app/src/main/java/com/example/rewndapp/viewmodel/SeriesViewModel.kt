@@ -17,49 +17,17 @@ class SeriesViewModel : ViewModel() {
         uiState = uiState.copy(seriesList = SerieRepository.getSeries())
     }
 
-    // Lista y detalle
-    fun onSerieClick(serie: Serie) {
-        uiState = uiState.copy(serieIdSeleccionado = serie.id)
-    }
-
-    fun onVolver() {
-        uiState = uiState.copy(serieIdSeleccionado = null)
-    }
-
-    // Borrado
-    fun onBorrarClick(serie: Serie) {
-        uiState = uiState.copy(serieABorrar = serie)
-    }
-
-    fun onCancelarBorrado(serie: Serie) {
-        uiState = uiState.copy(serieABorrar = null)
-    }
-
-    fun onConfirmarBorrado(){
-        val serie = uiState.serieABorrar ?: return
+    // Borrar Serie
+    fun onConfirmarBorrado(id: String){
+        val serie = uiState.seriesList.find { it.id == id } ?: return
         SerieRepository.deleteSerie(serie.id)
         uiState = uiState.copy(
             seriesList = SerieRepository.getSeries(),
-            serieABorrar = null,
-            serieIdSeleccionado = null,
             mensaje = "Serie '${serie.titulo}' eliminada"
         )
     }
 
-    // Añadir Serie
-    fun onAnadirClick() {
-        uiState = uiState.copy(mostrarAnadir = true)
-    }
-
-    fun onCancelarAnadir() {
-        uiState = uiState.copy(
-            mostrarAnadir = false,
-            textoBusqueda = "",
-            resultados = emptyList(),
-            serieEncontrada = null
-        )
-    }
-
+    // Buscar Serie
     fun onBusqueda(texto: String){
         uiState = uiState.copy(
             textoBusqueda = texto,
@@ -68,17 +36,17 @@ class SeriesViewModel : ViewModel() {
         )
     }
 
+    // Elegir un resultado de la búsqueda
     fun onResultadoClick(serie: Serie) {
-        uiState = uiState.copy(serieEncontrada = serie,)
-
+        uiState = uiState.copy(serieEncontrada = serie)
     }
 
+    // Confirmación para añadir serie
     fun onConfirmarAnadir(){
         val serie = uiState.serieEncontrada ?: return
         SerieRepository.addSerie(serie)
         uiState = uiState.copy(
             seriesList = SerieRepository.getSeries(),
-            mostrarAnadir = false,
             textoBusqueda = "",
             resultados = emptyList(),
             serieEncontrada = null,
@@ -87,45 +55,43 @@ class SeriesViewModel : ViewModel() {
     }
 
     // Editar Serie
-    fun onEditarClick(serie: Serie) {
-        uiState = uiState.copy(serieAEditar = serie)
-    }
-
     fun onCancelarEdicion() {
-        uiState = uiState.copy(
-            serieAEditar = null,
-            errorEdicion = null)
+        uiState = uiState.copy(errorEdicion = null)
     }
 
-    fun onGuardarEdicion(estado: Estado, temporada: Int, terminada: Boolean) {
-        val serie = uiState.serieAEditar ?: return
+    // Guardar Serie
+    fun onGuardarEdicion(estado: Estado, temporada: Int, terminada: Boolean, id: String): Boolean {
+        val serie = uiState.seriesList.find{it.id == id} ?: return false
         var terminadas = serie.temporadasTerminadas
         var enCurso = serie.temporadaEnCurso
 
         if (estado == Estado.POR_VER) {
             terminadas = 0
             enCurso = 0
+            return true
         } else if (terminada) {
             terminadas = temporada
             if (enCurso <= temporada) {
                 enCurso = 0
+                return true
             }
         } else {
             terminadas = temporada - 1
             enCurso = temporada
+            return true
         }
 
         if (estado == Estado.COMPLETADA && terminadas != serie.totalTemporadas) {
             uiState = uiState.copy(
                 errorEdicion = "Para marcarla como Completadas, termina la última temporada (T${serie.totalTemporadas})"
             )
-            return
+            return false
         }
         if (estado == Estado.VIENDO && terminadas == serie.totalTemporadas) {
             uiState = uiState.copy(
                 errorEdicion = "Has terminado todas las temporadas: el estado debe ser Completadas"
             )
-            return
+            return false
         }
 
         val serieActualizada = serie.copy(
@@ -136,10 +102,10 @@ class SeriesViewModel : ViewModel() {
         SerieRepository.updateSerie(serieActualizada)
         uiState = uiState.copy(
             seriesList = SerieRepository.getSeries(),
-            serieAEditar = null,
             errorEdicion = null,
             mensaje = "Progreso de '${serie.titulo}' actualizado"
         )
+        return true
     }
 
     // Mensajes

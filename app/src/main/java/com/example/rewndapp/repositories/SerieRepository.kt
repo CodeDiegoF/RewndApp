@@ -126,6 +126,7 @@ object SerieRepository {
         }
         return series.filter { serie ->
             serie.titulo.contains(texto, ignoreCase = true) && series.none { it.id == serie.id }
+
         }
     }
 }
