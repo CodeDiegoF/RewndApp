@@ -1,4 +1,4 @@
-package com.example.rewndapp
+package com.example.rewndapp.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,6 +41,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.rewndapp.R
+import com.example.rewndapp.RewndApp
 import com.example.rewndapp.model.Serie
 import com.example.rewndapp.repositories.SerieRepository
 import com.example.rewndapp.ui.theme.Fondo

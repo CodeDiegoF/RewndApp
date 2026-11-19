@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.example.rewndapp.model.Serie
+import com.example.rewndapp.ui.screens.Biblioteca
+import com.example.rewndapp.ui.screens.Detalle
 
 @Composable
 fun RewndApp() {
