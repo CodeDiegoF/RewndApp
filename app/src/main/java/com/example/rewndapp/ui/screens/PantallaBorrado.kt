@@ -109,7 +109,7 @@ fun PantallaBorrado(
             ) {
                 Text("No se puede deshacer", fontWeight = FontWeight.Bold, color = Color.White)
                 Text(
-                    "Podrás volver a añadir ${serie.titulo}, pero tendrás que marcar de nuevo las temporadas como terminadas.",
+                    "Podrás volver a añadir ${serie.titulo}, pero tendrás que marcar de nuevo las temporadas como terminadas o en curso.",
                     fontSize = 14.sp,
                     color = TextoSecundario
                 )

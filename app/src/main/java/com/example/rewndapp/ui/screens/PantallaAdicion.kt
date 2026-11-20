@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -97,67 +98,121 @@ fun PantallaAdicion(
         },
         bottomBar = { BarraInferior() }
     ) { paddingValues ->
-        LazyColumn(
+
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
+                .background(color = Fondo)
+        ){
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
 
-            // he tenido que investigar par poner los iconos en la barra de busqueda
-            item{
-                OutlinedTextField(
-                    value = textoBusqueda,
-                    onValueChange = { texto -> onBuscar(texto)},
-                    placeholder = { Text("Buscar nueva serie", color = TextoSecundario) },
-                    leadingIcon = {
-                        Icon(Icons.Default.Search, contentDescription = "Buscar", tint = Color.White)
-                    },
-                    trailingIcon = {
-                        if (textoBusqueda.isNotEmpty()) {
-                            IconButton(onClick = { onBuscar("") }) {
-                                Icon(Icons.Default.Close, contentDescription = "Limpiar", tint = Color.White)
+                // he tenido que investigar par poner los iconos en la barra de busqueda
+                item{
+                    OutlinedTextField(
+                        value = textoBusqueda,
+                        onValueChange = { texto -> onBuscar(texto)},
+                        placeholder = { Text("Buscar nueva serie", color = TextoSecundario) },
+                        leadingIcon = {
+                            Icon(Icons.Default.Search, contentDescription = "Buscar", tint = Color.White)
+                        },
+                        trailingIcon = {
+                            if (textoBusqueda.isNotEmpty()) {
+                                IconButton(onClick = { onBuscar("") }) {
+                                    Icon(Icons.Default.Close, contentDescription = "Limpiar", tint = Color.White)
+                                }
                             }
-                        }
-                    },
-                    singleLine = true,
-                    textStyle = TextStyle(color = Color.White),
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            if (textoBusqueda.isNotBlank()){
-                item {
-                    val textoResultados = if (resultados.isEmpty()) {
-                        "No se han encontrado series"
-                    } else {
-                        "${resultados.size} resultados"
-                    }
-                    Text(textoResultados, fontWeight = FontWeight.Bold, color = Color.White)
+                        },
+                        singleLine = true,
+                        textStyle = TextStyle(color = Color.White),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                        )
                 }
-            }
 
-            items(resultados, key = { it.id }) { serie ->
-                SerieEncontrada(
-                    serie = serie,
-                    onClick = { onSeleccionar(serie) },
-                    seleccionada = serie.id == serieEncontrada?.id
-                )
-            }
+                if (textoBusqueda.isNotBlank()){
+                    item {
+                        val textoResultados = if (resultados.isEmpty()) {
+                            "No se han encontrado series"
+                        } else {
+                            "${resultados.size} resultados"
+                        }
+                        Text(
+                            textoResultados,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                    }
+                }
 
-            item {
-                OutlinedButton(
-                    onClick = onAnadir,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    shape = RectangleShape,
-                    colors = ButtonDefaults.buttonColors(containerColor = Naranja)
-                ){
-                    Text(
-                        color = Color.Black,
-                        text = " + Añadir serie"
+                items(resultados, key = { it.id }) { serie ->
+                    SerieEncontrada(
+                        serie = serie,
+                        onClick = { onSeleccionar(serie) },
+                        seleccionada = serie.id == serieEncontrada?.id
                     )
+                }
+
+                item {
+                    Text(
+                        text = "${serieEncontrada.titulo} - Serie seleccionada",
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                    Text(
+                        text = "${serieEncontrada.sinopsis}",
+                        color = Color.White,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                }
+
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .background(FondoTarjeta)
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+                        ) {
+                            Text(
+                                text = "Protección por temporadas",
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                            Text(
+                                text = "En «Por ver» no hay temporadas terminadas: todos" +
+                                        "sus comentarios están ocultos. Puedes revelar cada" +
+                                        "comentario con «Ver spoiler».",
+                                fontSize = 14.sp,
+                                color = Color.White
+                            )
+                        }
+                    }
+                }
+
+                item {
+                    OutlinedButton(
+                        onClick = onAnadir,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        shape = RectangleShape,
+                        colors = ButtonDefaults.buttonColors(containerColor = Naranja)
+                    ){
+                        Text(
+                            color = Color.Black,
+                            text = " + Añadir serie"
+                        )
+                    }
                 }
             }
         }
@@ -201,7 +256,8 @@ fun SerieEncontrada(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(serie.titulo, fontSize = 20.sp, color = Color.White)
-                Text("${serie.anio} - ${serie.generos}", fontSize = 13.sp, color = TextoSecundario)
+                Text("${serie.anio} - ${serie.pais}", color = TextoSecundario)
+                Text("${serie.generos}", color = TextoSecundario)
             }
             Box(
                 modifier = Modifier
