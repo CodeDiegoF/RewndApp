@@ -15,7 +15,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -23,7 +25,10 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,114 +56,145 @@ import com.example.rewndapp.ui.theme.FondoTarjeta
 import com.example.rewndapp.ui.theme.Naranja
 import com.example.rewndapp.ui.theme.TextoSecundario
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Biblioteca(onSerieClick: (Serie) -> Unit = {}) {
     var nombre by rememberSaveable { mutableStateOf("") }
     var serie by rememberSaveable { mutableStateOf("") }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Fondo)
-    ) {
-        LazyColumn(
+    Scaffold(
+        containerColor = Fondo,
+        topBar = {
+            TopAppBar(
+                title = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ){
+                        Text(
+                            color = Naranja, text = "Rewnd |",
+                            style = MaterialTheme.typography.headlineMedium
+                        )
+                        Column (
+                            modifier = Modifier
+                                .padding(4.dp)
+                                .weight(1f),
+                            verticalArrangement = Arrangement.Top,
+                        ) {
+                            Text(
+                                color = Color.White, text = ("Mi Biblioteca"),
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        }
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Fondo
+                )
+            )
+        },
+        bottomBar = { BarraInferior() }
+    ){ paddingValues ->
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp),
-            contentPadding = PaddingValues(bottom = 120.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+                .background(color = Fondo)
+                .padding(paddingValues)
         ) {
-            item{
-                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Cabecera(nombre = nombre)
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                contentPadding = PaddingValues(bottom = 120.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                item{
+                    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                        Cabecera(nombre = nombre)
+                    }
                 }
-            }
 
-            item{
-                OutlinedTextField(
-                    value = serie,
-                    onValueChange = { textoNuevo -> serie = textoNuevo },
-                    label = { Text("Buscar serie en mi biblioteca", color = Color.White, fontSize = 14.sp) },
-                    singleLine = true,
-                    textStyle = TextStyle(color = Color.White),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
+                item{
+                    OutlinedTextField(
+                        value = serie,
+                        onValueChange = { textoNuevo -> serie = textoNuevo },
+                        label = { Text("Buscar serie en mi biblioteca", color = Color.White, fontSize = 14.sp) },
+                        singleLine = true,
+                        textStyle = TextStyle(color = Color.White),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
 
-            item{
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    horizontalArrangement = Arrangement.Center,
-                ){
+                item{
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        horizontalArrangement = Arrangement.Center,
+                    ){
+                        OutlinedButton(
+                            onClick = { },
+                            modifier = Modifier.weight(1f),
+                            shape = RectangleShape,
+                            contentPadding = PaddingValues(horizontal = 4.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Naranja)
+                        ){
+                            Text(
+                                color = Color.Black,
+                                text = "Viendo"
+                            )
+                        }
+                        OutlinedButton(
+                            onClick = {},
+                            shape = RectangleShape,
+                            modifier = Modifier.weight(1f),
+                            contentPadding = PaddingValues(horizontal = 4.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = FondoCaratula)
+                        ){
+                            Text(
+                                color = Color.White,
+                                text = "Por ver"
+                            )
+                        }
+                        OutlinedButton(
+                            onClick = {},
+                            shape = RectangleShape,
+                            modifier = Modifier.weight(1f),
+                            contentPadding = PaddingValues(horizontal = 4.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = FondoCaratula)
+                        ){
+                            Text(
+                                color = Color.White,
+                                text = "Completadas"
+                            )
+                        }
+                    }
+                }
+
+                items(SerieRepository.getSeries()) { serie ->
+                    TarjetaSerie(
+                        serie = serie,
+                        onClick = { onSerieClick(serie) }
+                    )
+                }
+
+                item {
                     OutlinedButton(
                         onClick = { },
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
                         shape = RectangleShape,
-                        contentPadding = PaddingValues(horizontal = 4.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Naranja)
                     ){
                         Text(
                             color = Color.Black,
-                            text = "Viendo"
-                        )
-                    }
-                    OutlinedButton(
-                        onClick = {},
-                        shape = RectangleShape,
-                        modifier = Modifier.weight(1f),
-                        contentPadding = PaddingValues(horizontal = 4.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = FondoCaratula)
-                    ){
-                        Text(
-                            color = Color.White,
-                            text = "Por ver"
-                        )
-                    }
-                    OutlinedButton(
-                        onClick = {},
-                        shape = RectangleShape,
-                        modifier = Modifier.weight(1f),
-                        contentPadding = PaddingValues(horizontal = 4.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = FondoCaratula)
-                    ){
-                        Text(
-                            color = Color.White,
-                            text = "Completadas"
+                            text = " + Añadir serie"
                         )
                     }
                 }
             }
-
-            items(SerieRepository.getSeries()) { serie ->
-                TarjetaSerie(
-                    serie = serie,
-                    onClick = { onSerieClick(serie) }
-                )
-            }
-
-            item {
-                OutlinedButton(
-                    onClick = { },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    shape = RectangleShape,
-                    colors = ButtonDefaults.buttonColors(containerColor = Naranja)
-                ){
-                    Text(
-                        color = Color.Black,
-                        text = " + Añadir serie"
-                    )
-                }
-            }
-        }
-
-        Box(
-            modifier = Modifier.align(Alignment.BottomCenter)
-        ) {
-            BarraInferior()
         }
     }
 }
@@ -166,27 +202,6 @@ fun Biblioteca(onSerieClick: (Serie) -> Unit = {}) {
 
 @Composable
 fun Cabecera(nombre: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ){
-        Text(
-            color = Naranja, text = "Rewnd |",
-            style = MaterialTheme.typography.headlineMedium
-        )
-        Column (
-            modifier = Modifier
-                .padding(4.dp)
-                .weight(1f),
-            verticalArrangement = Arrangement.Top,
-        ) {
-            Text(
-                color = Color.White, text = ("Mi Biblioteca"),
-                style = MaterialTheme.typography.titleLarge
-            )
-        }
-    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
