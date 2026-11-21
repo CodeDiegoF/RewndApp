@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.rewndapp.R
 import com.example.rewndapp.RewndApp
+import com.example.rewndapp.model.Estado
 import com.example.rewndapp.model.Serie
 import com.example.rewndapp.repositories.SerieRepository
 import com.example.rewndapp.ui.theme.Fondo
@@ -58,7 +59,12 @@ import com.example.rewndapp.ui.theme.TextoSecundario
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Biblioteca(onSerieClick: (Serie) -> Unit = {}) {
+fun Biblioteca(
+    onSerieClick: (Serie) -> Unit = {},
+    onAnadir: () -> Unit,
+    onFiltrar: (Estado) -> Unit,
+    filtroEstado: Estado
+) {
     var nombre by rememberSaveable { mutableStateOf("") }
     var serie by rememberSaveable { mutableStateOf("") }
 
@@ -134,11 +140,13 @@ fun Biblioteca(onSerieClick: (Serie) -> Unit = {}) {
                         horizontalArrangement = Arrangement.Center,
                     ){
                         OutlinedButton(
-                            onClick = { },
+                            onClick = {onFiltrar(Estado.VIENDO)},
                             modifier = Modifier.weight(1f),
                             shape = RectangleShape,
                             contentPadding = PaddingValues(horizontal = 4.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Naranja)
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (filtroEstado == Estado.VIENDO) Naranja else FondoCaratula
+                            )
                         ){
                             Text(
                                 color = Color.Black,
@@ -146,11 +154,13 @@ fun Biblioteca(onSerieClick: (Serie) -> Unit = {}) {
                             )
                         }
                         OutlinedButton(
-                            onClick = {},
+                            onClick = {onFiltrar(Estado.POR_VER)},
                             shape = RectangleShape,
                             modifier = Modifier.weight(1f),
                             contentPadding = PaddingValues(horizontal = 4.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = FondoCaratula)
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (filtroEstado == Estado.POR_VER) Naranja else FondoCaratula
+                            )
                         ){
                             Text(
                                 color = Color.White,
@@ -158,11 +168,13 @@ fun Biblioteca(onSerieClick: (Serie) -> Unit = {}) {
                             )
                         }
                         OutlinedButton(
-                            onClick = {},
+                            onClick = {onFiltrar(Estado.COMPLETADA)},
                             shape = RectangleShape,
                             modifier = Modifier.weight(1f),
                             contentPadding = PaddingValues(horizontal = 4.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = FondoCaratula)
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (filtroEstado == Estado.COMPLETADA) Naranja else FondoCaratula
+                            )
                         ){
                             Text(
                                 color = Color.White,
@@ -181,7 +193,7 @@ fun Biblioteca(onSerieClick: (Serie) -> Unit = {}) {
 
                 item {
                     OutlinedButton(
-                        onClick = { },
+                        onClick = onAnadir,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),

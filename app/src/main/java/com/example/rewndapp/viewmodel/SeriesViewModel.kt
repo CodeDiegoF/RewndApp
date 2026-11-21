@@ -108,6 +108,11 @@ class SeriesViewModel : ViewModel() {
         return true
     }
 
+    // Filtrar Serie
+    fun onFiltrarSeries(estado: Estado){
+        uiState = uiState.copy(estadoSerie = estado)
+    }
+
     // Mensajes
     fun onMensajeMostrado() {
         uiState = uiState.copy(mensaje = null)
