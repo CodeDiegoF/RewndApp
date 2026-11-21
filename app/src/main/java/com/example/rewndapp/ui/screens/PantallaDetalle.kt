@@ -45,9 +45,11 @@ import com.example.rewndapp.ui.theme.TextoSecundario
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Detalle(
+fun PantallaDetalle(
     serie: Serie,
     onVolver: () -> Unit,
+    onEliminar: () -> Unit,
+    onEditar: () -> Unit
 ) {
     Scaffold(
         containerColor = Fondo,
@@ -95,23 +97,6 @@ fun Detalle(
                     .padding(bottom = 80.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    IconButton(onClick = onVolver) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_atras),
-                            contentDescription = "Volver",
-                            tint = Color.White
-                        )
-                    }
-                    Text(
-                        color = Color.White,
-                        text = "Detalle de la serie",
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     Box(
@@ -179,7 +164,7 @@ fun Detalle(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OutlinedButton(
-                        onClick = { },
+                        onClick = onEditar,
                         modifier = Modifier.weight(1f),
                         shape = RectangleShape,
                         colors = ButtonDefaults.buttonColors(containerColor = FondoCaratula)
@@ -187,7 +172,7 @@ fun Detalle(
                         Text(color = Color.White, text = "Editar progreso", maxLines = 1)
                     }
                     OutlinedButton(
-                        onClick = { },
+                        onClick = onEliminar,
                         modifier = Modifier.weight(1f),
                         shape = RectangleShape,
                         colors = ButtonDefaults.buttonColors(containerColor = FondoCaratula)
@@ -204,9 +189,11 @@ fun Detalle(
 @Composable
 fun DetallePreview() {
     MaterialTheme {
-        Detalle(
+        PantallaDetalle(
             serie = SerieRepository.getSeries()[0],
-            onVolver = {  }
+            onVolver = {},
+            onEditar = {},
+            onEliminar = {}
         )
     }
 }

@@ -62,7 +62,7 @@ import com.example.rewndapp.ui.theme.TextoSecundario
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaAdicion(
-    serieEncontrada: Serie,
+    serieEncontrada: Serie?,
     textoBusqueda: String,
     resultados: List<Serie>,
     onBuscar: (String) -> Unit,
@@ -129,8 +129,8 @@ fun PantallaAdicion(
                         },
                         singleLine = true,
                         textStyle = TextStyle(color = Color.White),
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                        )
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                    )
                 }
 
                 if (textoBusqueda.isNotBlank()){
@@ -157,44 +157,47 @@ fun PantallaAdicion(
                     )
                 }
 
-                item {
-                    Text(
-                        text = "${serieEncontrada.titulo} - Serie seleccionada",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-                    Text(
-                        text = "${serieEncontrada.sinopsis}",
-                        color = Color.White,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-                }
 
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .background(FondoTarjeta)
-                    ) {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+                if (serieEncontrada != null) {
+                    item {
+                        Text(
+                            text = "${serieEncontrada?.titulo} - Serie seleccionada",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                        Text(
+                            text = "${serieEncontrada?.sinopsis}",
+                            color = Color.White,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                    }
+
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                                .background(FondoTarjeta)
                         ) {
-                            Text(
-                                text = "Protección por temporadas",
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White
-                            )
-                            Text(
-                                text = "En «Por ver» no hay temporadas terminadas: todos" +
-                                        "sus comentarios están ocultos. Puedes revelar cada" +
-                                        "comentario con «Ver spoiler».",
-                                fontSize = 14.sp,
-                                color = Color.White
-                            )
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+                            ) {
+                                Text(
+                                    text = "Protección por temporadas",
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White
+                                )
+                                Text(
+                                    text = "En «Por ver» no hay temporadas terminadas: todos" +
+                                            "sus comentarios están ocultos. Puedes revelar cada" +
+                                            "comentario con «Ver spoiler».",
+                                    fontSize = 14.sp,
+                                    color = Color.White
+                                )
+                            }
                         }
                     }
                 }

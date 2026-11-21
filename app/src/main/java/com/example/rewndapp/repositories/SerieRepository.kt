@@ -75,6 +75,10 @@ object SerieRepository {
             temporadasTerminadas = 1,
             temporadaEnCurso = 2
         ),
+    )
+
+    // Series que se pueden encontrar al buscar (más adelante vendrán de la API)
+    private val catalogo = listOf(
         Serie(
             titulo = "The Bear",
             anio = 2022,
@@ -85,6 +89,18 @@ object SerieRepository {
             idioma = "Inglés",
             sinopsis = "Un joven chef regresa a Chicago para hacerse cargo del restaurante familiar y transformarlo junto a su equipo.",
             imagen = "https://image.tmdb.org/t/p/w500/sHFlbKS3WLqDym8gAPm2fhp5i3x.jpg",
+            estado = Estado.POR_VER
+        ),
+        Serie(
+            titulo = "We Bare Bears",
+            anio = 2015,
+            generos = "Animación, comedia",
+            pais = "Estados Unidos",
+            totalTemporadas = 4,
+            episodios = 140,
+            idioma = "Inglés",
+            sinopsis = "Tres hermanos osos intentan encajar en la vida humana en San Francisco.",
+            imagen = "",
             estado = Estado.POR_VER
         ),
         Serie(
@@ -124,9 +140,8 @@ object SerieRepository {
         if (texto.isBlank()) {
             return emptyList()
         }
-        return series.filter { serie ->
+        return catalogo.filter { serie ->
             serie.titulo.contains(texto, ignoreCase = true) && series.none { it.id == serie.id }
-
         }
     }
 }

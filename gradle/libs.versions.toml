@@ -10,6 +10,7 @@ kotlin = "2.2.10"
 composeBom = "2026.02.01"
 material3 = "1.4.0"
 coil = "3.1.0"
+navigationCompose = "2.10.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,6 +32,7 @@ coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref 
 coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 # libs.versions.toml
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

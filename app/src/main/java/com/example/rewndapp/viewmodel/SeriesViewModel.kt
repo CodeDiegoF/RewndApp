@@ -47,16 +47,12 @@ class SeriesViewModel : ViewModel() {
         SerieRepository.addSerie(serie)
         uiState = uiState.copy(
             seriesList = SerieRepository.getSeries(),
+            estadoSerie = Estado.POR_VER,
             textoBusqueda = "",
             resultados = emptyList(),
             serieEncontrada = null,
             mensaje = "Serie '${serie.titulo}' añadida a Por ver"
         )
-    }
-
-    // Editar Serie
-    fun onCancelarEdicion() {
-        uiState = uiState.copy(errorEdicion = null)
     }
 
     // Guardar Serie
@@ -68,17 +64,14 @@ class SeriesViewModel : ViewModel() {
         if (estado == Estado.POR_VER) {
             terminadas = 0
             enCurso = 0
-            return true
         } else if (terminada) {
             terminadas = temporada
             if (enCurso <= temporada) {
                 enCurso = 0
-                return true
             }
         } else {
             terminadas = temporada - 1
             enCurso = temporada
-            return true
         }
 
         if (estado == Estado.COMPLETADA && terminadas != serie.totalTemporadas) {
@@ -108,9 +101,16 @@ class SeriesViewModel : ViewModel() {
         return true
     }
 
+    fun onLimpiarError() {
+        uiState = uiState.copy(errorEdicion = null)
+    }
+
     // Filtrar Serie
     fun onFiltrarSeries(estado: Estado){
         uiState = uiState.copy(estadoSerie = estado)
+    }
+    fun onFiltrarTexto(texto: String){
+        uiState = uiState.copy(textoFiltro = texto)
     }
 
     // Mensajes

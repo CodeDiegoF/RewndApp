@@ -45,9 +45,9 @@ import com.example.rewndapp.ui.theme.TextoSecundario
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaBorrado(
+    serie: Serie,
     onConfirmar: () -> Unit,
-    onCancelar: () -> Unit,
-    serie: Serie
+    onCancelar: () -> Unit
 ) {
     Scaffold(
         containerColor = Fondo,

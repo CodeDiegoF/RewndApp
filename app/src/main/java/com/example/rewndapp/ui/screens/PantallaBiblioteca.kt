@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,14 +60,17 @@ import com.example.rewndapp.ui.theme.TextoSecundario
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Biblioteca(
+fun PantallaBiblioteca(
+    textoFiltro: String,
+    resultados: List<Serie>,
+    onBuscar: (String) -> Unit,
+    series: List<Serie>,
     onSerieClick: (Serie) -> Unit = {},
     onAnadir: () -> Unit,
     onFiltrar: (Estado) -> Unit,
     filtroEstado: Estado
 ) {
     var nombre by rememberSaveable { mutableStateOf("") }
-    var serie by rememberSaveable { mutableStateOf("") }
 
     Scaffold(
         containerColor = Fondo,
@@ -123,12 +127,19 @@ fun Biblioteca(
 
                 item{
                     OutlinedTextField(
-                        value = serie,
-                        onValueChange = { textoNuevo -> serie = textoNuevo },
+                        value = textoFiltro,
+                        onValueChange = { texto -> onBuscar(texto) },
                         label = { Text("Buscar serie en mi biblioteca", color = Color.White, fontSize = 14.sp) },
                         singleLine = true,
                         textStyle = TextStyle(color = Color.White),
                         modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+
+                items(resultados, key = { it.id }) { serie ->
+                    TarjetaSerie(
+                        serie = serie,
+                        onClick = { onSerieClick(serie) }
                     )
                 }
 
@@ -149,7 +160,7 @@ fun Biblioteca(
                             )
                         ){
                             Text(
-                                color = Color.Black,
+                                color = Color.White,
                                 text = "Viendo"
                             )
                         }
@@ -184,7 +195,7 @@ fun Biblioteca(
                     }
                 }
 
-                items(SerieRepository.getSeries()) { serie ->
+                items(series) { serie ->
                     TarjetaSerie(
                         serie = serie,
                         onClick = { onSerieClick(serie) }
@@ -333,13 +344,5 @@ fun BarraInferior(){
                 unselectedTextColor = TextoSecundario
             )
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun BibliotecaPreview() {
-    MaterialTheme {
-        RewndApp()
     }
 }

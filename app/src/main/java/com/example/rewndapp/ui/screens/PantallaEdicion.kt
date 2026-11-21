@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Info
@@ -26,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,8 +56,10 @@ import com.example.rewndapp.ui.theme.TextoSecundario
 @Composable
 fun PantallaEdicion(
     serie: Serie,
+    error: String?,
     onVolver: () -> Unit,
-    onGuardar: (Estado, Int, Boolean) -> Unit
+    onGuardar: (Estado, Int, Boolean) -> Unit,
+    onLimpiarError: () -> Unit
 ) {
     var estado by remember { mutableStateOf(serie.estado) }
 
@@ -72,6 +77,10 @@ fun PantallaEdicion(
 
     var desplegado by remember { mutableStateOf(false) }
 
+    // he tenido que investigar también como limpiar errores para que no se queden de forma permanente
+    LaunchedEffect(estado, temporada, terminada) {
+        onLimpiarError()
+    }
     Scaffold(
         containerColor = Fondo,
         topBar = {
@@ -104,7 +113,8 @@ fun PantallaEdicion(
                 .fillMaxSize()
                 .background(color = Fondo)
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text("Progreso:", color = Color.White, fontWeight = FontWeight.Bold)
@@ -143,7 +153,7 @@ fun PantallaEdicion(
                     )
                 ) {
                     Text(
-                        color = if (estado == Estado.POR_VER) Color.Black else Color.White,
+                        color = Color.White,
                         text = "Por ver"
                     )
                 }
@@ -227,6 +237,10 @@ fun PantallaEdicion(
                 }
             }
 
+            if (error != null) {
+                Text(error, color = Color(0xFFFF6B6B), fontSize = 14.sp)
+            }
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -274,21 +288,32 @@ fun PantallaEdicion(
                 }
             }
 
-            OutlinedButton(
-                onClick = { onGuardar(estado, temporada, terminada) },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RectangleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = Naranja)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
             ) {
-                Text(color = Color.Black, text = "Guardar cambios")
-            }
-            OutlinedButton(
-                onClick = onVolver,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RectangleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = FondoCaratula)
-            ) {
-                Text(color = Color.White, text = "Cancelar")
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    OutlinedButton(
+                        onClick = { onGuardar(estado, temporada, terminada) },
+                        modifier = Modifier.weight(1f),
+                        shape = RectangleShape,
+                        colors = ButtonDefaults.buttonColors(containerColor = Naranja)
+                    ) {
+                        Text(color = Color.Black, text = "Guardar cambios")
+                    }
+                    OutlinedButton(
+                        onClick = onVolver,
+                        modifier = Modifier.weight(1f),
+                        shape = RectangleShape,
+                        colors = ButtonDefaults.buttonColors(containerColor = FondoCaratula)
+                    ) {
+                        Text(color = Color.White, text = "Cancelar")
+                    }
+                }
             }
         }
     }
@@ -300,8 +325,10 @@ fun EdicionPreview() {
     MaterialTheme {
         PantallaEdicion(
             serie = SerieRepository.getSeries()[0],
+            error = null,
             onVolver = {},
-            onGuardar = { _, _, _ -> }
+            onGuardar = { _, _, _ -> },
+            onLimpiarError = {}
         )
     }
 }
