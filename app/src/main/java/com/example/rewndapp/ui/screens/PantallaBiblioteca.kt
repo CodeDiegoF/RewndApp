@@ -202,19 +202,21 @@ fun PantallaBiblioteca(
                     )
                 }
 
-                item {
-                    OutlinedButton(
-                        onClick = onAnadir,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        shape = RectangleShape,
-                        colors = ButtonDefaults.buttonColors(containerColor = Naranja)
-                    ){
-                        Text(
-                            color = Color.Black,
-                            text = " + Añadir serie"
-                        )
+                if (filtroEstado == Estado.POR_VER) {
+                    item {
+                        OutlinedButton(
+                            onClick = onAnadir,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                            shape = RectangleShape,
+                            colors = ButtonDefaults.buttonColors(containerColor = Naranja)
+                        ){
+                            Text(
+                                color = Color.Black,
+                                text = " + Añadir serie"
+                            )
+                        }
                     }
                 }
             }
