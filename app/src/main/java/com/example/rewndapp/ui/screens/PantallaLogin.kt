@@ -65,9 +65,8 @@ fun PantallaLogin(
     var email by remember { mutableStateOf("") }
     var contrasenia by remember { mutableStateOf("") }
     var verContrasenia by remember { mutableStateOf(false) }
-    var repetirContrasenia by remember { mutableStateOf("") }
 
-    LaunchedEffect(email, contrasenia, repetirContrasenia) {
+    LaunchedEffect(email, contrasenia) {
         onLimpiarError()
     }
 
