@@ -60,13 +60,13 @@ fun PantallaSplash(
         Image(
             painter = painterResource(id = R.drawable.logo_rewnd),
             contentDescription = "Logo de Rewnd",
-            modifier = Modifier.size(160.dp)
+            modifier = Modifier.size(250.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             "Comenta sin spoilers",
             color = Color(0xFFE0D2C8),
-            fontSize = 18.sp
+            fontSize = 25.sp
         )
         Spacer(modifier = Modifier.height(48.dp))
 
@@ -74,7 +74,7 @@ fun PantallaSplash(
             progress = { progreso },
             modifier = Modifier
                 .fillMaxWidth(0.8f)
-                .height(4.dp),
+                .height(6.dp),
             color = Color.Black,
             trackColor = Color.White
         )

@@ -17,18 +17,25 @@ import com.example.rewndapp.ui.screens.PantallaBiblioteca
 import com.example.rewndapp.ui.screens.PantallaBorrado
 import com.example.rewndapp.ui.screens.PantallaDetalle
 import com.example.rewndapp.ui.screens.PantallaEdicion
+import com.example.rewndapp.ui.screens.PantallaLogin
+import com.example.rewndapp.ui.screens.PantallaRecuperar
+import com.example.rewndapp.ui.screens.PantallaRegistro
+import com.example.rewndapp.ui.screens.PantallaSplash
+import com.example.rewndapp.viewmodel.AuthViewModel
 import com.example.rewndapp.viewmodel.SeriesViewModel
 
 @Composable
-fun RewndApp(viewModel: SeriesViewModel = viewModel()) {
+fun RewndApp(viewModel: SeriesViewModel = viewModel(),
+             authViewModel: AuthViewModel = viewModel()) {
     val navController = rememberNavController()
 
     val uiState = viewModel.uiState
+    val authUiState = authViewModel.uiState
 
 
     NavHost(
         navController = navController,
-        startDestination = Rutas.BIBLIOTECA,
+        startDestination = Rutas.SPLASH,
         modifier = Modifier.safeDrawingPadding(),
 
         enterTransition = {
@@ -45,6 +52,47 @@ fun RewndApp(viewModel: SeriesViewModel = viewModel()) {
             slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(300))
         }
     ){
+        composable ( Rutas.SPLASH ){
+            PantallaSplash{
+                navController.navigate(Rutas.REGISTRO)
+            }
+        }
+
+        composable(Rutas.REGISTRO) {
+            PantallaRegistro(
+                cargando = authUiState.cargando,
+                error = authUiState.error,
+                onRegistro = { email, contrasenia, repetir ->
+                    authViewModel.onRegistro(email, contrasenia, repetir)
+                },
+                onIrALogin = { navController.navigate(Rutas.LOGIN) },
+                onLimpiarError = { authViewModel.onLimpiarError() }
+            )
+        }
+
+        composable (Rutas.LOGIN){
+            PantallaLogin(
+                cargando = authUiState.cargando,
+                error = authUiState.error,
+                onLogin = { email, contrasenia ->
+                    authViewModel.onLogin(email, contrasenia)
+                },
+                onIrARegistro = { navController.navigate(Rutas.REGISTRO) },
+                onIrARecuperar = {navController.navigate(Rutas.RECUPERAR_CLAVE)},
+                onLimpiarError = { authViewModel.onLimpiarError() }
+            )
+        }
+
+        composable (Rutas.RECUPERAR_CLAVE){
+            PantallaRecuperar(
+                cargando = authUiState.cargando,
+                error = authUiState.error,
+                mensaje = authUiState.mensaje,
+                onRecuperar = {email -> authViewModel.onRecuperarClave(email)},
+                onIrALogin = { navController.navigate(Rutas.LOGIN) },
+                onLimpiarError = { authViewModel.onLimpiarError() }
+            )
+        }
 
         composable(Rutas.BIBLIOTECA) {
             PantallaBiblioteca(

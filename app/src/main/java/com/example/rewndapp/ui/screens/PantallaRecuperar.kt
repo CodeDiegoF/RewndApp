@@ -19,7 +19,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -41,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.rewndapp.R
 import com.example.rewndapp.ui.theme.Fondo
+import com.example.rewndapp.ui.theme.FondoCaratula
 import com.example.rewndapp.ui.theme.Naranja
 
 
@@ -129,6 +133,30 @@ fun PantallaRecuperar(
 
                 if (error != null) {
                     Text(error, color = Color(0xFFFF6B6B), fontSize = 14.sp)
+                }
+                if (mensaje != null) {
+                    Text(mensaje, color = Color(0xFF7BE07B), fontSize = 14.sp)
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+                OutlinedButton(
+                    onClick = { onRecuperar(email) },
+                    enabled = !cargando,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Naranja,
+                        disabledContainerColor = FondoCaratula
+                    )
+                ) {
+                    if (cargando) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            color = Color.White
+                        )
+                    } else {
+                        Text(color = Color.Black, text = "Enviar correo")
+                    }
                 }
 
                 Row(
