@@ -111,7 +111,6 @@ fun PantallaAdicion(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
 
-                // he tenido que investigar par poner los iconos en la barra de busqueda
                 item{
                     OutlinedTextField(
                         value = textoBusqueda,

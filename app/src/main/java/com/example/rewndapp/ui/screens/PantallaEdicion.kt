@@ -68,7 +68,7 @@ fun PantallaEdicion(
             if (serie.temporadaEnCurso > 0) serie.temporadaEnCurso
             else if (serie.temporadasTerminadas > 0) serie.temporadasTerminadas
             else 1
-        ) // para esto tambien he investigado si se pueden poner if dentro de los mutableStateOf
+        )
     }
 
     var terminada by remember {
@@ -77,7 +77,6 @@ fun PantallaEdicion(
 
     var desplegado by remember { mutableStateOf(false) }
 
-    // he tenido que investigar también como limpiar errores para que no se queden de forma permanente
     LaunchedEffect(estado, temporada, terminada) {
         onLimpiarError()
     }
@@ -188,7 +187,7 @@ fun PantallaEdicion(
                         tint = Color.White
                     )
                 }
-                // para utilizar el DropdownMenu he tenido que onvestigar un poco para matizar conceptos y su funcionamiento
+
                 DropdownMenu(
                     expanded = desplegado,
                     onDismissRequest = { desplegado = false }

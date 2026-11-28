@@ -1,6 +1,13 @@
 package com.example.rewndapp.routes
 
 object Rutas {
+    const val AUTH = "auth"
+
+    const val SPLASH = "inicio"
+    const val LOGIN = "login"
+    const val REGISTRO = "registro"
+    const val RECUPERAR_CLAVE = "recuperar_clave"
+
     const val BIBLIOTECA = "biblioteca"
     const val DETALLE = "detalle/{id}"
     const val ANADIR = "anadir"
