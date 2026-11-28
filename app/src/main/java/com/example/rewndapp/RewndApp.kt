@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
@@ -32,6 +33,24 @@ fun RewndApp(viewModel: SeriesViewModel = viewModel(),
     val uiState = viewModel.uiState
     val authUiState = authViewModel.uiState
 
+    LaunchedEffect(authUiState.haySesion) {
+        val ruta = navController.currentDestination?.route
+        if (authUiState.haySesion) {
+            if (ruta == Rutas.LOGIN || ruta == Rutas.REGISTRO) {
+                navController.navigate(Rutas.BIBLIOTECA) {
+                    popUpTo(navController.graph.id) { inclusive = true }
+                }
+            }
+        } else {
+            if (ruta != null && ruta != Rutas.SPLASH && ruta != Rutas.LOGIN
+                && ruta != Rutas.REGISTRO && ruta != Rutas.RECUPERAR_CLAVE
+            ) {
+                navController.navigate(Rutas.LOGIN) {
+                    popUpTo(navController.graph.id) { inclusive = true }
+                }
+            }
+        }
+    }
 
     NavHost(
         navController = navController,
@@ -52,9 +71,17 @@ fun RewndApp(viewModel: SeriesViewModel = viewModel(),
             slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(300))
         }
     ){
-        composable ( Rutas.SPLASH ){
-            PantallaSplash{
-                navController.navigate(Rutas.REGISTRO)
+        composable(Rutas.SPLASH) {
+            PantallaSplash {
+                if (authUiState.haySesion) {
+                    navController.navigate(Rutas.BIBLIOTECA) {
+                        popUpTo(Rutas.SPLASH) { inclusive = true }
+                    }
+                } else {
+                    navController.navigate(Rutas.LOGIN) {
+                        popUpTo(Rutas.SPLASH) { inclusive = true }
+                    }
+                }
             }
         }
 
@@ -65,7 +92,7 @@ fun RewndApp(viewModel: SeriesViewModel = viewModel(),
                 onRegistro = { email, contrasenia, repetir ->
                     authViewModel.onRegistro(email, contrasenia, repetir)
                 },
-                onIrALogin = { navController.navigate(Rutas.LOGIN) },
+                onIrALogin = { navController.popBackStack() },
                 onLimpiarError = { authViewModel.onLimpiarError() }
             )
         }
@@ -89,7 +116,7 @@ fun RewndApp(viewModel: SeriesViewModel = viewModel(),
                 error = authUiState.error,
                 mensaje = authUiState.mensaje,
                 onRecuperar = {email -> authViewModel.onRecuperarClave(email)},
-                onIrALogin = { navController.navigate(Rutas.LOGIN) },
+                onIrALogin = { navController.popBackStack() },
                 onLimpiarError = { authViewModel.onLimpiarError() }
             )
         }
@@ -103,7 +130,8 @@ fun RewndApp(viewModel: SeriesViewModel = viewModel(),
                 onSerieClick = { serie -> navController.navigate(Rutas.detalle(serie.id)) },
                 onAnadir = { navController.navigate(Rutas.ANADIR) },
                 onFiltrar = { estado -> viewModel.onFiltrarSeries(estado) },
-                filtroEstado = uiState.estadoSerie
+                filtroEstado = uiState.estadoSerie,
+                onCerrarSesion = { authViewModel.onCerrarSesion() }
             )
         }
 

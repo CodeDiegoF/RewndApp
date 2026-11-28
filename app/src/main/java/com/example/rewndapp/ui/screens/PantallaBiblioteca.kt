@@ -68,7 +68,8 @@ fun PantallaBiblioteca(
     onSerieClick: (Serie) -> Unit = {},
     onAnadir: () -> Unit,
     onFiltrar: (Estado) -> Unit,
-    filtroEstado: Estado
+    filtroEstado: Estado,
+    onCerrarSesion: () -> Unit = {}
 ) {
     var nombre by rememberSaveable { mutableStateOf("") }
 
@@ -97,6 +98,15 @@ fun PantallaBiblioteca(
                                 style = MaterialTheme.typography.titleLarge
                             )
                         }
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onCerrarSesion) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_logout),
+                            contentDescription = "Cerrar sesión",
+                            tint = Naranja
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
